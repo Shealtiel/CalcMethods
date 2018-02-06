@@ -41,7 +41,7 @@ def secant(init0, init1):
         d = func(init1)*(init1 - init0)/(func(init1) - func(init0))
         init1 -= d
         init0 += d
-        # print(init0, " ", init1)
+        # print(init1)
         if np.abs(d) < eps/10:
             return init1
 
@@ -51,23 +51,25 @@ def finite_dif(init):
     while True:
         d = h*func(init)/(func(init+h)-func(init))
         init -= d
+        # print(init)
         if np.abs(d) < eps:
             return init
 
 
 def steffensen(init):
     while True:
-        d = func(init)**2/(func(init + func(init)) - func(init))
+        d = (func(init)**2)/(func(init + func(init)) - func(init))
         init -= d
+        # print(init)
         if np.abs(d) < eps:
             return init
 
 
 def simple(init):
     while True:
+        # print(init)
         d = func(init)*0.1
         init -= d
-        print(init)
         if np.abs(d) < eps:
             return init
 
