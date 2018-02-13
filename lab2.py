@@ -24,7 +24,8 @@ def find_roots(array):
     return roots
 
 
-def gauss(array):
+def gauss(array, b):
+    array = np.append(array, b, axis=1)
     n = array.shape[0]
     array_result = np.zeros(array.shape)
     array_result[0] += array[0]
@@ -41,14 +42,34 @@ def error(exact, approx):
     return np.abs((exact - approx) / approx)
 
 
+def seidel(array, b, init):
+    l = np.tril(array)      # нижняя часть
+    u = np.triu(array, 1)   # верхняя часть
+    li = np.linalg.inv(l)
+    t = -np.dot(li, u)
+    c = np.dot(li, b)
+    d = np.eye(4)*array
+    A = -np.dot(np.linalg.inv(l + d), u)
+
+    if np.linalg.norm(A) < 1:
+        while True:
+            d = np.dot(t, init) - c
+            init += d
+            if np.linalg.norm(d) < 1e-7:
+                return init
+    else:
+        print("Метод не сходится.")
+
+
 A = np.array([[1.15, 0.42, 10.10, 4.25],
               [1.59, 0.55, -0.32, 0.29],
               [1.14, 3.15, 2.05, 7.86],
               [0.77, 6.11, -3.01, 0.74]])
 b = np.array([[15.08], [1.01], [7.90], [-7.61]])
 x_exact = np.array([1, -1, 1, 1])
-A_b = np.append(A, b, axis=1)
+x0 = np.array([[.5], [-0.5], [.5], [.5]])
 
-x_apprcx = find_roots(gauss(A_b))
+x_approx_1 = find_roots(gauss(A, b))
+x_approx_2 = seidel(A, b, x0)
 
-print(error(x_exact, x_apprcx))
+# print(error(x_exact, x_approx_1))
