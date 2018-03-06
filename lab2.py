@@ -27,7 +27,7 @@ def find_roots(array):
 def gauss(array, b):
     array = np.append(array, b, axis=1)
     n = array.shape[0]
-    print(n)
+    # print(n)
     array_result = np.zeros(array.shape)
     array_result[0] += array[0]
     for j in range(n - 1):
@@ -57,10 +57,10 @@ def seidel(array, b, init):
             d = np.dot(t, init) - c
             init += d
             if np.linalg.norm(d) < 1e-7:
-                print(init)
+                # print(init)
                 return init
     else:
-        print("Метод не сходится.")
+        return "Метод не сходится."
 
 
 A = np.array([[1.15, 0.42, 10.10, 4.25],
@@ -73,5 +73,8 @@ x0 = np.array([[.5], [-0.5], [.5], [.5]])
 
 x_approx_1 = find_roots(gauss(A, b))
 x_approx_2 = seidel(A, b, x0)
+
+print("Метод Гаусса: ", x_approx_1)
+print("Метод Зейделя: ", x_approx_2)
 
 print(error(x_exact, x_approx_1))
