@@ -42,22 +42,24 @@ def gauss(array, b):
 def error(exact, approx):
     return np.abs((exact - approx) / approx)
 
-
+# TODO fix seidel
 def seidel(array, b, init):
+    array = np.dot(array.T, array)
+    norm = np.linalg.norm(array)
+    b = np.dot(array.T, b)
+
     l = np.tril(array)      # нижняя часть
     u = np.triu(array, 1)   # верхняя часть
     li = np.linalg.inv(l)
     t = -np.dot(li, u)
     c = np.dot(li, b)
-    d = np.eye(4)*array
-    A = -np.dot(np.linalg.inv(l + d), u)
-
-    if np.linalg.norm(A) < 1:
+    a = np.dot(-np.linalg.inv(l), u)
+    norm = np.linalg.norm(a)
+    if norm < 1:
         while True:
-            d = np.dot(t, init) - c
-            init += d
-            if np.linalg.norm(d) < 1e-7:
-                # print(init)
+            dk = np.dot(t, init)
+            init = dk + c
+            if np.linalg.norm(dk) < 1e-7:
                 return init
     else:
         return "Метод не сходится."
@@ -72,9 +74,9 @@ x_exact = np.array([1, -1, 1, 1])
 x0 = np.array([[.5], [-0.5], [.5], [.5]])
 
 x_approx_1 = find_roots(gauss(A, b))
-x_approx_2 = seidel(A, b, x0)
+# x_approx_2 = seidel(A, b, x0)
 
 print("Метод Гаусса: ", x_approx_1)
-print("Метод Зейделя: ", x_approx_2)
+# print("Метод Зейделя: ", x_approx_2)
 
 print(error(x_exact, x_approx_1))
