@@ -1,3 +1,5 @@
 numpy
 matplotlib
 prettytable
+triflow
+scipy
